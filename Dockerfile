@@ -13,12 +13,15 @@ RUN cd /tmp && wget --no-check-certificate -q -t 0 -c https://www.python.org/ftp
 # Python pip
 RUN cd /tmp && wget --no-check-certificate -q -t 0 -c https://bootstrap.pypa.io/get-pip.py && python get-pip.py && rm -f get-pip.py
 # Conan 
-RUN pip install -U pip && pip install conan_package_tools
+RUN pip install -U pip && pip install conan conan_package_tools
 
 # Sudo user
 RUN groupadd 1001 -g 1001 && groupadd 1000 -g 1000
 RUN useradd -m -s /bin/bash -g 1001 -G 1000 conan && echo "conan:conan" | chpasswd && usermod -aG wheel conan
 RUN echo "conan ALL= NOPASSWD: ALL" >> /etc/sudoers && mkdir -p /home/conan/.conan && chown conan:1001 /home/conan/.conan
+
+# Conan patch gcc-4.1
+COPY settings.yml /home/conan/.conan/settings.yml
 
 USER conan
 WORKDIR /home/conan
