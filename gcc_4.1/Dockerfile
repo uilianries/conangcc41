@@ -26,8 +26,5 @@ RUN echo "conan ALL= NOPASSWD: ALL" >> /etc/sudoers && mkdir -p /home/conan/.con
 # Solve sudo tty
 RUN sed -i -e 's/Defaults    requiretty/# Defaults    requiretty/g' /etc/sudoers
 
-# Conan patch gcc-4.1
-COPY settings.yml /home/conan/.conan/settings.yml
-
 USER conan
 WORKDIR /home/conan
