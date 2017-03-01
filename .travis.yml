@@ -2,7 +2,7 @@ services:
   - docker
 
 install:
-  - cd gcc_4.1 && docker build -q -t uilianries/conangcc41 .
+  - cd gcc_4.1 && docker build -t uilianries/conangcc41 .
   - docker run -d --name conangcc41 uilianries/conangcc41
 
 script:
