@@ -1,4 +1,4 @@
-# Docker CentOS 5  [![License](http://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org)
+# Docker CentOS 5  [![License](http://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org) [![Build Status](https://travis-ci.org/uilianries/conangcc41.svg?branch=develop)](https://travis-ci.org/uilianries/conangcc41)
 
 ## Docker image for Centos 5, Conan and GCC-4.1
 
