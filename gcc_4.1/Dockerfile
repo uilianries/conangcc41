@@ -10,6 +10,8 @@ RUN yum install -y wget sudo bzip2 make xz nasm valgrind vim zlib openssl-devel 
 RUN cd /tmp && wget --no-check-certificate -q -t 0 -c https://www.sqlite.org/2017/sqlite-autoconf-3170000.tar.gz && tar zxf sqlite-autoconf-3170000.tar.gz && cd sqlite-autoconf-3170000 && ./configure && make && make install && rm -rf /tmp/sqlite-*
 # OpenSSL 1.0.2a
 RUN cd /tmp && wget --no-check-certificate -q -t 0 -c https://www.openssl.org/source/openssl-1.0.2a.tar.gz && tar -zxf openssl-1.0.2a.tar.gz && cd openssl-1.0.2a && ./config -fPIC --prefix=/usr --openssldir=/usr/include/openssl shared && make && make install && rm -rf /tmp/openssl-*
+# libffi 3.2.1
+RUN cd /tmp && wget -q -t 0 -c ftp://sourceware.org/pub/libffi/libffi-3.2.1.tar.gz && tar -zxf libffi-3.2.1.tar.gz && cd libffi-3.2.1 && sed -e '/^includesdir/ s/$(libdir).*$/$(includedir)/' -i include/Makefile.in && sed -e '/^includedir/ s/=.*$/=@includedir@/' -e 's/^Cflags: -I${includedir}/Cflags:/' -i libffi.pc.in && ./configure --prefix=/usr --disable-static && make && make install && rm -rf /tmp/libffi-*
 # CMake 3.6
 RUN cd /tmp && wget --no-check-certificate -q -t 0 -c https://cmake.org/files/v3.6/cmake-3.6.3.tar.gz && tar -xzf cmake-3.6.3.tar.gz && cd cmake-3.6.3 && ./bootstrap && make && make install && rm -rf /tmp/cmake-*
 # Git 2.11.1
