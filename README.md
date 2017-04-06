@@ -1,4 +1,4 @@
-# Docker CentOS 5  [![License](http://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org) [![Build Status](https://travis-ci.org/uilianries/conangcc41.svg?branch=develop)](https://travis-ci.org/uilianries/conangcc41)
+# Docker CentOS 5  [![License](http://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org) [![Build Status](https://travis-ci.org/uilianries/conangcc41.svg?branch=master)](https://travis-ci.org/uilianries/conangcc41)
 
 ## Docker image for Centos 5, Conan and GCC-4.1
 
@@ -14,16 +14,12 @@ You could obtain the latest image:
 #### Build
 To build this image:
 
-    $ cd gcc_4.1 && ./build.sh
+    $ docker build --tag uilianries/conangcc41
 
 #### Run
 Use your conan cache as container volume:
 
-    $ gcc_4.1/run.sh
-
-#### Build and Upload
-
-    $ python build.py
+    $ docker run --rm -ti --name conangcc41 uilianries/conangcc41
 
 #### License
 Copyright (C) 2017 Uilian Ries  
