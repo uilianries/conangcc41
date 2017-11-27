@@ -7,11 +7,20 @@ MAINTAINER Uilian Ries <uilianries@gmail.com>
 RUN sed -i -e 's/mirrorlist=/#mirrorlist=/g' /etc/yum.repos.d/CentOS-Base.repo \
  && sed -i -e 's/#baseurl=/baseurl=/g' /etc/yum.repos.d/CentOS-Base.repo \
  && sed -i -e 's/mirror.centos.org\/centos\/$releasever/vault.centos.org\/5.11/g' /etc/yum.repos.d/CentOS-Base.repo \
+ # libselinux doesn’t seem to exist anymore on vault, but it is
+ # still found by yum install, causing errors
+ && rm -rf /etc/yum.repos.d/libselinux.repo \
  # Development tools
  && yum upgrade -y \
+ # Prevents a conflict between x86/x64 libselinux on next line
+ && yum downgrade -y libselinux \
  && yum groupinstall -y 'Development Tools' \
  # Dependencies
  && yum install -y wget sudo bzip2 make xz nasm valgrind vim zlib openssl-devel curl-devel \
+ # Necessary to create x86 packages
+ && yum install -y glibc-devel.i386 \
+ # SCTP protocol
+ && yum install -y lksctp-tools-devel \
  # Sqlite3
  && cd /tmp \
  && wget --no-check-certificate -q -t 0 -c https://www.sqlite.org/2017/sqlite-autoconf-3170000.tar.gz \
@@ -50,6 +59,33 @@ RUN sed -i -e 's/mirrorlist=/#mirrorlist=/g' /etc/yum.repos.d/CentOS-Base.repo \
  && make \
  && make install \
  && rm -rf /tmp/cmake-* \
+ # libtool 2.4.6
+ && cd /tmp \
+ && wget http://mirror.nbtelecom.com.br/gnu/libtool/libtool-2.4.6.tar.gz \
+ && tar xzf libtool-2.4.6.tar.gz \
+ && cd libtool-2.4.6 \
+ && ./configure --prefix=/usr/ \
+ && make \
+ && make install \
+ && rm -rf /tmp/libtool-* \
+ # autoconf 2.69
+ && cd /tmp \
+ && wget https://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz \
+ && tar xzf autoconf-2.69.tar.gz \
+ && cd autoconf-2.69 \
+ && ./configure --prefix=/usr/ \
+ && make \
+ && make install \
+ && rm -rf /tmp/autoconf-* \
+ # automake 1.15.1
+ && cd /tmp \
+ && wget https://ftp.gnu.org/gnu/automake/automake-1.15.1.tar.gz \
+ && tar xzf automake-1.15.1.tar.gz \
+ && cd automake-1.15.1 \
+ && ./configure --prefix=/usr/ \
+ && make \
+ && make install \
+ && rm -rf /tmp/automake-* \
  # Git 2.11.1
  && cd /tmp \
  && wget --no-check-certificate -q -t 0 -c https://www.kernel.org/pub/software/scm/git/git-2.11.1.tar.gz \
@@ -74,6 +110,15 @@ RUN sed -i -e 's/mirrorlist=/#mirrorlist=/g' /etc/yum.repos.d/CentOS-Base.repo \
  && wget --no-check-certificate -q -t 0 -c https://bootstrap.pypa.io/get-pip.py \
  && python get-pip.py \
  && rm -f get-pip.py \
+ # Python 3.4
+ && cd /tmp \
+ && wget https://www.python.org/ftp/python/3.4.7/Python-3.4.7.tgz \
+ && tar zxf Python-3.4.7.tgz \
+ && cd Python-3.4.7 \
+ && ./configure --prefix=/usr/ \
+ && make \
+ && make install \
+ && rm -rf /tmp/Python* \
  # Conan 
  && pip install -U pip \
  && pip install conan conan_package_tools \
