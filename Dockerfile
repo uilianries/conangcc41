@@ -1,7 +1,8 @@
 FROM centos:5
 
-MAINTAINER Uilian Ries <uilianries@gmail.com>
+LABEL maintainer="Uilian Ries <uilianries@gmail.com>"
 
+COPY externals/get-pip.py /tmp
 
  # Cent OS Vault as repository
 RUN sed -i -e 's/mirrorlist=/#mirrorlist=/g' /etc/yum.repos.d/CentOS-Base.repo \
@@ -23,10 +24,10 @@ RUN sed -i -e 's/mirrorlist=/#mirrorlist=/g' /etc/yum.repos.d/CentOS-Base.repo \
  && yum -q install -y lksctp-tools-devel \
  # Sqlite3
  && cd /tmp \
- && wget --no-check-certificate -q -t 0 -c https://www.sqlite.org/2017/sqlite-autoconf-3170000.tar.gz \
- && tar zxf sqlite-autoconf-3170000.tar.gz \
- && cd sqlite-autoconf-3170000 \
- && ./configure \
+ && wget --no-check-certificate -q -t 0 -c https://sqlite.org/2017/sqlite-autoconf-3210000.tar.gz \
+ && tar zxf sqlite-autoconf-3210000.tar.gz \
+ && cd sqlite-autoconf-3210000 \
+ && ./configure --quiet \
  && make -s \
  && make -s install \
  && rm -rf /tmp/sqlite-* \
@@ -64,7 +65,7 @@ RUN sed -i -e 's/mirrorlist=/#mirrorlist=/g' /etc/yum.repos.d/CentOS-Base.repo \
  && wget --no-check-certificate -q -t 0 -c http://mirror.nbtelecom.com.br/gnu/libtool/libtool-2.4.6.tar.gz \
  && tar xzf libtool-2.4.6.tar.gz \
  && cd libtool-2.4.6 \
- && ./configure --prefix=/usr/ \
+ && ./configure --quiet --prefix=/usr/ \
  && make -s \
  && make -s install \
  && rm -rf /tmp/libtool-* \
@@ -73,7 +74,7 @@ RUN sed -i -e 's/mirrorlist=/#mirrorlist=/g' /etc/yum.repos.d/CentOS-Base.repo \
  && wget --no-check-certificate -q -t 0 -c https://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz \
  && tar xzf autoconf-2.69.tar.gz \
  && cd autoconf-2.69 \
- && ./configure --prefix=/usr/ \
+ && ./configure --quiet --prefix=/usr/ \
  && make -s \
  && make -s install \
  && rm -rf /tmp/autoconf-* \
@@ -82,7 +83,7 @@ RUN sed -i -e 's/mirrorlist=/#mirrorlist=/g' /etc/yum.repos.d/CentOS-Base.repo \
  && wget --no-check-certificate -q -t 0 -c https://ftp.gnu.org/gnu/automake/automake-1.15.1.tar.gz \
  && tar xzf automake-1.15.1.tar.gz \
  && cd automake-1.15.1 \
- && ./configure --prefix=/usr/ \
+ && ./configure --quiet --prefix=/usr/ \
  && make -s \
  && make -s install \
  && rm -rf /tmp/automake-* \
@@ -91,7 +92,7 @@ RUN sed -i -e 's/mirrorlist=/#mirrorlist=/g' /etc/yum.repos.d/CentOS-Base.repo \
  && wget --no-check-certificate -q -t 0 -c https://www.kernel.org/pub/software/scm/git/git-2.11.1.tar.gz \
  && tar -zxf git-2.11.1.tar.gz \
  && cd git-2.11.1 \
- && ./configure \
+ && ./configure --quiet \
  && make -s \
  && make -s install \
  && rm -rf /tmp/git-* \
@@ -101,24 +102,23 @@ RUN sed -i -e 's/mirrorlist=/#mirrorlist=/g' /etc/yum.repos.d/CentOS-Base.repo \
  && unxz Python-2.7.13.tar.xz \
  && tar xf Python-2.7.13.tar \
  && cd Python-2.7.13 \
- && ./configure \
+ && ./configure --quiet \
  && make -s \
  && make -s install \
  && rm -rf /tmp/Python* \
- # Python pip
- && cd /tmp \
- && wget --no-check-certificate -q -t 0 -c https://bootstrap.pypa.io/get-pip.py \
- && python get-pip.py \
- && rm -f get-pip.py \
  # Python 3.4
  && cd /tmp \
  && wget --no-check-certificate -q -t 0 -c https://www.python.org/ftp/python/3.4.7/Python-3.4.7.tgz \
  && tar zxf Python-3.4.7.tgz \
  && cd Python-3.4.7 \
- && ./configure --prefix=/usr/ \
+ && ./configure --quiet --enable-loadable-sqlite-extensions --prefix=/usr/ \
  && make -s \
  && make -s install \
  && rm -rf /tmp/Python* \
+ # Python Pip
+ && cd /tmp \
+ && python get-pip.py \
+ && rm -f get-pip.py \
  # Conan
  && pip -q install -U pip \
  && pip -q install conan conan_package_tools \
